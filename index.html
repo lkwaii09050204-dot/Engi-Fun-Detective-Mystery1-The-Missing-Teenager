@@ -316,11 +316,13 @@
                         <!-- Posts Grid -->
                         <div class="grid grid-cols-3 gap-0.5">
                             <div onclick="openIGPost()" class="aspect-square bg-gray-800 cursor-pointer relative overflow-hidden">
-                                <img src="ig.jpg" alt="Instagram Thumbnail" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden')">
-                                <div class="absolute inset-0 bg-gradient-to-br from-green-800 to-teal-900 flex items-center justify-center hidden">
+                                <!-- Real Image (covers fallback if loaded successfully) -->
+                                <img src="ig.png" alt="Instagram Thumbnail" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
+                                <!-- Fallback -->
+                                <div class="absolute inset-0 bg-gradient-to-br from-green-800 to-teal-900 flex items-center justify-center">
                                     <i class="fa-solid fa-images text-2xl opacity-40"></i>
                                 </div>
-                                <span class="absolute bottom-1 right-1 bg-black/60 px-1 rounded text-[8px]">Feed</span>
+                                <span class="absolute bottom-1 right-1 bg-black/60 px-1 rounded text-[8px] z-20">Feed</span>
                             </div>
                         </div>
                     </div>
@@ -338,8 +340,10 @@
                             <span class="font-bold text-xs">jerry_wong99</span>
                         </div>
                         <div class="w-full aspect-square bg-gray-900 relative overflow-hidden flex items-center justify-center">
-                            <img src="ig.jpg" alt="Jerry's Instagram Post" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden')">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-800 to-teal-900 flex flex-col items-center justify-center p-6 text-center hidden">
+                            <!-- Real Image -->
+                            <img src="ig.png" alt="Jerry's Instagram Post" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
+                            <!-- Fallback -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-800 to-teal-900 flex flex-col items-center justify-center p-6 text-center">
                                 <i class="fa-solid fa-mountain-sun text-4xl text-emerald-300 mb-2"></i>
                                 <p class="text-xs font-semibold text-white">Landscape View Photo</p>
                             </div>
@@ -646,26 +650,31 @@
                         
                         <!-- Photo 1: Happy Family Trip -->
                         <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('Happy Family Trip', 'Dad, Mom, and my happiest moment.', 'Aug 15, 2025', '照片1.jpeg', 'from-amber-400 to-amber-600', 'fa-people-roof')">
+                            <!-- Fallback background (shows first or if img fails) -->
                             <div class="absolute inset-0 bg-gradient-to-tr from-amber-400 to-amber-600 flex flex-col items-center justify-center p-2 text-center text-white">
                                 <i class="fa-solid fa-people-roof text-xl opacity-40 mb-1"></i>
                                 <span class="text-[8px] font-semibold">Happy Family Trip</span>
                             </div>
+                            <!-- Real Image (covers fallback if loaded successfully) -->
+                            <img src="照片1.jpeg" alt="Happy Family Trip" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
 
-                        <!-- Decoy Photo: School Project -->
-                        <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('School Project', 'Boring science fair project details.', 'Nov 20, 2026', '照片b1.jpeg', 'from-green-400 to-emerald-600', 'fa-flask')">
+                        <!-- Decoy Photo: School Project (PNG) -->
+                        <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('School Project', 'Boring science fair project details.', 'Nov 20, 2026', '照片b1.png', 'from-green-400 to-emerald-600', 'fa-flask')">
                             <div class="absolute inset-0 bg-gradient-to-tr from-green-400 to-emerald-600 flex flex-col items-center justify-center p-2 text-center text-white">
                                 <i class="fa-solid fa-flask text-xl opacity-40 mb-1"></i>
                                 <span class="text-[8px] font-semibold">School Project</span>
                             </div>
+                            <img src="照片b1.png" alt="School Project" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
 
-                        <!-- Decoy Photo: Burger -->
-                        <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('Burger', 'Best burger in town.', 'Nov 22, 2026', '照片b2.jpeg', 'from-orange-400 to-red-500', 'fa-burger')">
+                        <!-- Decoy Photo: Burger (PNG) -->
+                        <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('Burger', 'Best burger in town.', 'Nov 22, 2026', '照片b2.png', 'from-orange-400 to-red-500', 'fa-burger')">
                             <div class="absolute inset-0 bg-gradient-to-tr from-orange-400 to-red-500 flex flex-col items-center justify-center p-2 text-center text-white">
                                 <i class="fa-solid fa-burger text-xl opacity-40 mb-1"></i>
                                 <span class="text-[8px] font-semibold">Burger</span>
                             </div>
+                            <img src="照片b2.png" alt="Burger" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
 
                         <!-- Photo 2: Mom's Work Photo -->
@@ -674,6 +683,7 @@
                                 <i class="fa-solid fa-briefcase text-xl opacity-40 mb-1"></i>
                                 <span class="text-[8px] font-semibold">Mom and colleagues</span>
                             </div>
+                            <img src="照片2.jpeg" alt="Mom and colleagues" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
 
                         <!-- Photo 3: Sneaky Back Photo -->
@@ -682,11 +692,12 @@
                                 <i class="fa-solid fa-user-secret text-xl opacity-40 mb-1"></i>
                                 <span class="text-[8px] font-semibold">Stranger Back</span>
                             </div>
+                            <img src="照片3.jpeg" alt="Stranger Back" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
                     </div>
                 </div>
 
-                <!-- Fullscreen Photo Viewer (Hidden by default) -->
+                <!-- Fullscreen Photo Viewer -->
                 <div id="photo-viewer" class="hidden absolute inset-0 bg-black z-30 flex flex-col transition-opacity">
                     <div class="p-4 flex justify-between items-center text-white pt-8">
                         <button onclick="closePhoto()" class="text-sm"><i class="fa-solid fa-chevron-left mr-1"></i>Back</button>
@@ -695,8 +706,13 @@
                     </div>
                     <div class="flex-1 flex flex-col items-center justify-center p-4">
                         <div id="pv-color" class="w-full h-64 rounded-xl flex flex-col items-center justify-center mb-6 shadow-2xl relative overflow-hidden text-white">
-                            <i id="pv-icon" class="fa-solid text-6xl text-white/50 mb-3"></i>
-                            <span id="pv-placeholder" class="text-xs font-medium opacity-60">Photo Fallback Description</span>
+                            <!-- Fallback Content Container -->
+                            <div id="pv-fallback-content" class="flex flex-col items-center justify-center transition-opacity">
+                                <i id="pv-icon" class="fa-solid text-6xl text-white/40 mb-3"></i>
+                                <span id="pv-placeholder" class="text-xs font-medium opacity-60">Photo Fallback Description</span>
+                            </div>
+                            <!-- Real Image (z-10 layer) -->
+                            <img id="pv-img" src="" alt="View Image" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'; document.getElementById('pv-fallback-content').style.opacity='0';" onerror="this.style.display='none'; document.getElementById('pv-fallback-content').style.opacity='1';" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
                         <h3 id="pv-title" class="text-white font-bold text-sm text-center mb-1">Title</h3>
                         <p id="pv-desc" class="text-slate-300 text-xs text-center px-4 leading-relaxed">Description</p>
@@ -774,7 +790,7 @@
                         </div>
                     </div>
 
-                    <!-- Spotify Playlist Detail View (Hidden by default) -->
+                    <!-- Spotify Playlist Detail View -->
                     <div id="spotify-playlist" class="hidden flex-1 flex flex-col h-full bg-gradient-to-b from-[#2a2a2a] to-[#121212] z-30">
                         <div class="p-4 pt-10 pb-4 flex items-center gap-4 sticky top-0 z-20">
                             <button onclick="closePlaylist()" class="text-white hover:text-gray-300 w-8 h-8 flex items-center justify-center bg-black/20 rounded-full"><i class="fa-solid fa-chevron-left text-sm"></i></button>
@@ -824,7 +840,7 @@
                                 Unlock
                             </button>
 
-                            <!-- Dynamic Hint Button (Hidden initially) -->
+                            <!-- Dynamic Hint Button -->
                             <button id="diary-hint-btn" onclick="showToast('Hint: Look for a recent happy family memory date...')" class="hidden text-[10px] text-amber-600 hover:underline mt-2">
                                 <i class="fa-regular fa-lightbulb mr-1"></i> Need a hint?
                             </button>
@@ -1150,11 +1166,18 @@
             const placeholderEl = document.getElementById('pv-placeholder');
             placeholderEl.innerText = `Local image asset: ${filename}`;
 
+            // Update image source and reset visibility states for actual rendering
+            const imgEl = document.getElementById('pv-img');
+            imgEl.style.display = 'block';
+            imgEl.style.opacity = '0';
+            imgEl.src = filename;
+
             document.getElementById('photo-viewer').classList.remove('hidden');
         }
 
         function closePhoto() {
             document.getElementById('photo-viewer').classList.add('hidden');
+            document.getElementById('pv-img').src = ''; // reset source
         }
 
         // Unlock Diary Logic
