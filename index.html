@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detective Mystery: Secrets Behind the Lens</title>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-FWZVXBVYPN"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-FWZVXBVYPN');
-</script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for premium icons -->
@@ -67,9 +58,26 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(156, 163, 175, 0.7);
         }
+        /* Shake Animation for Wrong Answers */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 lg:p-8 gap-8">
+<body class="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 lg:p-8 gap-8" onload="initGame()">
 
     <!-- Left Panel: Detective's Desk & Investigation Notebook -->
     <div class="w-full lg:w-1/2 max-w-xl bg-slate-800/80 backdrop-blur border border-slate-700 p-6 rounded-2xl shadow-2xl flex flex-col h-[740px]">
@@ -92,111 +100,60 @@
             </p>
         </div>
 
-        <!-- Interactive Detective's Notebook (Q&A Format) -->
-        <div class="flex-1 flex flex-col min-h-[200px] mb-4 overflow-hidden">
-            <div class="flex items-center justify-between mb-2 shrink-0">
+        <!-- Interactive Detective's Notebook (Dynamic Single Question) -->
+        <div class="flex-1 flex flex-col min-h-[200px] mb-2 overflow-hidden relative">
+            <div class="flex items-center justify-between mb-3 shrink-0">
                 <h3 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-clipboard-question mr-1"></i> Investigation Questionnaire</h3>
-                <span id="progress-text" class="text-xs text-slate-400 font-mono">0/10 Solved</span>
+                <span id="progress-text" class="text-xs text-slate-400 font-mono bg-slate-900 px-2 py-1 rounded">0/10 Solved</span>
             </div>
             
-            <!-- Scrollable Questions -->
-            <div class="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar" id="questionnaire">
-                
-                <!-- Q1 -->
-                <div id="q-1" class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">1. Who is the person Jerry messages the most?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-1" oninput="checkAnswer(1)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-1" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
+            <!-- Active Question Container -->
+            <div id="qa-container" class="bg-slate-900/60 p-5 rounded-xl border border-blue-400/30 shadow-lg mb-auto">
+                <label id="active-q-label" class="block text-sm text-slate-200 mb-3 font-semibold leading-relaxed fade-in">1. Who is the person Jerry messages the most?</label>
+                <div class="flex gap-2 w-full">
+                    <!-- Normal Text Input -->
+                    <input type="text" id="active-q-input" onkeypress="if(event.key === 'Enter') submitAnswer()" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 pl-3 text-sm text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" placeholder="Type your answer...">
+                    
+                    <!-- Q4 Specialized Dropdown Selects -->
+                    <div id="q4-select-container" class="hidden flex-1 gap-1">
+                        <select id="q4-month" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 px-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                            <option value="JAN">JAN</option>
+                            <option value="FEB">FEB</option>
+                            <option value="MAR">MAR</option>
+                            <option value="APR">APR</option>
+                            <option value="MAY">MAY</option>
+                            <option value="JUN">JUN</option>
+                            <option value="JUL">JUL</option>
+                            <option value="AUG">AUG</option>
+                            <option value="SEP">SEP</option>
+                            <option value="OCT">OCT</option>
+                            <option value="NOV">NOV</option>
+                            <option value="DEC">DEC</option>
+                        </select>
+                        <select id="q4-day" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 px-2 text-sm text-white focus:outline-none focus:border-amber-500"></select>
+                        <select id="q4-year" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 px-2 text-sm text-white focus:outline-none focus:border-amber-500"></select>
                     </div>
-                </div>
 
-                <!-- Q2 -->
-                <div id="q-2" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">2. What kind of "pills" were they actually discussing?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-2" oninput="checkAnswer(2)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-2" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
+                    <button onclick="submitAnswer()" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold px-4 py-2 rounded-lg transition shadow-md active:scale-95 shrink-0">Submit</button>
                 </div>
+            </div>
 
-                <!-- Q3 -->
-                <div id="q-3" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">3. What is the name of the game Jerry stays awake playing?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-3" oninput="checkAnswer(3)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-3" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
+            <!-- Detective Character Area -->
+            <div class="flex items-end gap-3 mt-4 shrink-0 h-32 relative">
+                <div class="relative w-[110px] h-[130px] flex-shrink-0 z-10 flex items-end">
+                    <img id="detective-img" src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/detective1.png" alt="Detective" class="w-full object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300">
                 </div>
-
-                <!-- Q4 -->
-                <div id="q-4" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">4. What is the exact date of the "Happy Family Trip" photo? (eg. 1 jan 2020)</label>
-                    <div class="relative">
-                        <input type="text" id="ans-4" oninput="checkAnswer(4)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-4" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
+                <!-- Speech Bubble -->
+                <div class="relative bg-slate-100 text-slate-800 text-[11px] font-bold p-3 rounded-2xl rounded-bl-sm shadow-xl mb-4 max-w-[220px] leading-relaxed border border-slate-300 fade-in">
+                    <span id="detective-bubble">Let's find out the truth! Read the client's statement and check the phone.</span>
+                    <!-- Chat bubble tail -->
+                    <div class="absolute -bottom-[5px] left-0 w-3 h-3 bg-slate-100 transform rotate-45 translate-x-1 -translate-y-1 border-b border-l border-slate-300"></div>
                 </div>
-
-                <!-- Q5 -->
-                <div id="q-5" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">5. Is there anything suspicious in the photo album? (Yes/No)</label>
-                    <div class="relative">
-                        <input type="text" id="ans-5" oninput="checkAnswer(5)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-5" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
-                </div>
-
-                <!-- Q6 -->
-                <div id="q-6" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">6. What is the password to Jerry's secret diary?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-6" oninput="checkAnswer(6)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-6" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
-                </div>
-
-                <!-- Q7 -->
-                <div id="q-7" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">7. In the photo "Blurry Back of Stranger", who is the man with Jerry's mom?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-7" oninput="checkAnswer(7)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-7" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
-                </div>
-
-                <!-- Q8 -->
-                <div id="q-8" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">8. Based on the messages, where is Jerry staying right now?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-8" oninput="checkAnswer(8)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-8" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
-                </div>
-
-                <!-- Q9 -->
-                <div id="q-9" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">9. Final Verdict: Is Jerry addicted to illegal drugs? (Yes/No)</label>
-                    <div class="relative">
-                        <input type="text" id="ans-9" oninput="checkAnswer(9)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-9" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
-                </div>
-
-                <!-- Q10 -->
-                <div id="q-10" class="hidden bg-slate-900/60 p-3 rounded-xl border border-slate-700/50 transition-all duration-500">
-                    <label class="block text-xs text-slate-300 mb-1.5 leading-snug font-semibold">10. Surprising discovery: Jerry's mom is actually having an ________?</label>
-                    <div class="relative">
-                        <input type="text" id="ans-10" oninput="checkAnswer(10)" class="w-full bg-slate-800 border border-slate-600 rounded-lg py-1.5 pl-3 pr-8 text-xs text-white focus:outline-none focus:border-amber-500 transition">
-                        <i id="icon-10" class="fa-solid fa-circle-check absolute right-2.5 top-2.5 text-emerald-500 hidden opacity-0 transition-opacity duration-300"></i>
-                    </div>
-                </div>
-
             </div>
         </div>
 
         <!-- Confront Button -->
-        <div class="shrink-0 mt-2">
+        <div class="shrink-0 mt-2 z-20">
             <button id="confront-btn" onclick="startConfrontation()" class="w-full py-3.5 bg-slate-700 text-slate-500 font-bold rounded-xl cursor-not-allowed transition flex items-center justify-center gap-2" disabled>
                 <i class="fa-solid fa-comments-question"></i> 
                 Confront Mrs. Chan
@@ -334,9 +291,7 @@
                         <!-- Posts Grid -->
                         <div class="grid grid-cols-3 gap-0.5">
                             <div onclick="openIGPost()" class="aspect-square bg-gray-800 cursor-pointer relative overflow-hidden">
-                                <!-- Real Image (covers fallback if loaded successfully) -->
                                 <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/ig.png" alt="Instagram Thumbnail" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
-                                <!-- Fallback -->
                                 <div class="absolute inset-0 bg-gradient-to-br from-green-800 to-teal-900 flex items-center justify-center">
                                     <i class="fa-solid fa-images text-2xl opacity-40"></i>
                                 </div>
@@ -358,9 +313,7 @@
                             <span class="font-bold text-xs">jerry_wong99</span>
                         </div>
                         <div class="w-full aspect-square bg-gray-900 relative overflow-hidden flex items-center justify-center">
-                            <!-- Real Image -->
                             <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/ig.png" alt="Jerry's Instagram Post" class="absolute inset-0 w-full h-full object-contain z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
-                            <!-- Fallback -->
                             <div class="absolute inset-0 bg-gradient-to-br from-green-800 to-teal-900 flex flex-col items-center justify-center p-6 text-center">
                                 <i class="fa-solid fa-mountain-sun text-4xl text-emerald-300 mb-2"></i>
                                 <p class="text-xs font-semibold text-white">Landscape View Photo</p>
@@ -409,7 +362,6 @@
                                 Thank you so much. You're the best. I'll pack some stuff and head over later.
                             </div>
                         </div>
-                        <!-- Chat Input (Visual) -->
                         <div class="p-3 border-t border-gray-800 pb-6">
                             <div class="bg-zinc-900 rounded-full px-4 py-2 text-gray-500 text-xs flex justify-between items-center border border-gray-700">
                                 <span>Message...</span>
@@ -421,22 +373,18 @@
 
                 <!-- APP: WhatsApp -->
                 <div id="app-whatsapp" class="hidden absolute inset-0 bg-[#0b141a] z-10 flex flex-col">
-                    
-                    <!-- WhatsApp Chat List screen -->
                     <div id="wa-inbox" class="flex-1 flex flex-col h-full bg-[#111b21] text-white">
                         <div class="bg-[#202c33] p-4 flex items-center justify-between shadow-md pt-8">
                             <button onclick="goHome()" class="text-emerald-500 hover:text-emerald-400 text-sm"><i class="fa-solid fa-chevron-left mr-1"></i>Back</button>
                             <span class="font-bold text-sm">WhatsApp</span>
                             <div class="w-6"></div>
                         </div>
-                        <!-- Search Box (mock) -->
                         <div class="p-3">
                             <div class="bg-[#202c33] rounded-lg px-3 py-1.5 flex items-center gap-2 text-xs text-gray-400">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                                 <span>Search or start a new chat</span>
                             </div>
                         </div>
-                        <!-- List of chats -->
                         <div class="flex-1 overflow-y-auto divide-y divide-gray-800">
                             <!-- Ah Keung -->
                             <div onclick="openChat('ahkeung')" class="flex items-center gap-3 p-3 hover:bg-gray-800/50 cursor-pointer">
@@ -668,12 +616,10 @@
                         
                         <!-- Photo 1: Happy Family Trip -->
                         <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('Happy Family Trip', 'Dad, Mom, and my happiest moment.', 'Aug 15, 2025', 'https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/%E7%85%A7%E7%89%871.jpeg', 'from-amber-400 to-amber-600', 'fa-people-roof')">
-                            <!-- Fallback background (shows first or if img fails) -->
                             <div class="absolute inset-0 bg-gradient-to-tr from-amber-400 to-amber-600 flex flex-col items-center justify-center p-2 text-center text-white">
                                 <i class="fa-solid fa-people-roof text-xl opacity-40 mb-1"></i>
                                 <span class="text-[8px] font-semibold">Happy Family Trip</span>
                             </div>
-                            <!-- Real Image (covers fallback if loaded successfully) -->
                             <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/%E7%85%A7%E7%89%871.jpeg" alt="Happy Family Trip" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
 
@@ -977,6 +923,22 @@
         </div>
     </div>
 
+    <!-- Donate Full Screen Overlay -->
+    <div id="donate-overlay" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[200] flex items-center justify-center p-4 opacity-0 transition-opacity duration-700">
+        <div class="relative w-full max-w-lg flex flex-col items-center">
+            <!-- Close Button -->
+            <button onclick="document.getElementById('donate-overlay').classList.add('hidden')" class="absolute -top-12 right-0 text-white hover:text-amber-400 text-4xl transition-colors">&times;</button>
+            
+            <a href="https://buymeacoffee.com/lkwai" target="_blank" class="block w-full transform hover:scale-105 transition-transform duration-300 shadow-[0_0_50px_rgba(251,191,36,0.3)] rounded-2xl overflow-hidden border-2 border-amber-500/50 cursor-pointer">
+                <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/donate.png" alt="Buy Me A Coffee" class="w-full h-auto object-cover">
+            </a>
+            
+            <p class="text-amber-400 mt-5 text-sm font-semibold animate-pulse tracking-wide drop-shadow-md">
+                <i class="fa-solid fa-mug-hot mr-2"></i>Support the game writer!
+            </p>
+        </div>
+    </div>
+
     <!-- Floating Toast Notification -->
     <div id="toast" class="hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800/95 backdrop-blur border border-slate-600 text-slate-200 text-xs px-5 py-3 rounded-full shadow-2xl z-[100] flex items-center gap-2 transition-opacity">
         <i class="fa-solid fa-circle-info text-amber-400"></i>
@@ -984,55 +946,166 @@
     </div>
 
     <script>
+        // Initialize Dropdowns and Set up Game
+        function initGame() {
+            // Generate Day Options
+            const q4Day = document.getElementById('q4-day');
+            for(let i=1; i<=31; i++) {
+                q4Day.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+            
+            // Generate Year Options
+            const q4Year = document.getElementById('q4-year');
+            for(let i=2000; i<=2030; i++) {
+                q4Year.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+
+            // Set default values (intentionally wrong so player has to change it)
+            document.getElementById('q4-month').value = "JAN";
+            q4Day.value = "1";
+            q4Year.value = "2020";
+
+            renderQuestion();
+        }
+
         // Core Logic Variables
         let failedDiaryAttempts = 0;
         let diaryUnlocked = false;
-        let solvedQuestions = 0;
         
-        // Q&A Logic State
-        const questionsState = {
-            1: { solved: false, regex: /^ah\s*keung$|^keung$/i },
-            2: { solved: false, regex: /exp|online games|online game/i },
-            3: { solved: false, regex: /^heroes\s*arena$/i },
-            4: { solved: false, regex: /^15\s*aug\s*2025$/i },
-            5: { solved: false, regex: /^yes$/i },
-            6: { solved: false, regex: /20250815|08152025|15082025/i },
-            7: { solved: false, regex: /colleague|coworker/i },
-            8: { solved: false, regex: /^(his\s+)?(chloe'?s|chole'?s|girlfriend'?s)\s+(home|house)$/i },
-            9: { solved: false, regex: /^no$/i },
-            10: { solved: false, regex: /affair/i }
-        };
+        // Single Question Flow State
+        let currentQIndex = 0;
 
-        // Q&A Validation Function
-        function checkAnswer(qNum) {
-            if (questionsState[qNum].solved) return; // Already solved
+        const qArray = [
+            { q: "1. Who is the person Jerry messages the most?", regex: /^ah\s*keung$|^keung$/i },
+            { q: "2. What kind of \"pills\" were they actually discussing?", regex: /exp|online games|online game/i },
+            { q: "3. What is the name of the game Jerry stays awake playing?", regex: /^heroes\s*arena$/i },
+            { q: "4. What is the exact date of the \"Happy Family Trip\" photo?", regex: /^15\s*aug\s*2025$/i },
+            { q: "5. Is there anything suspicious in the photo album? (Yes/No)", regex: /^yes$/i },
+            { q: "6. What is the password to Jerry's secret diary?", regex: /20250815|08152025|15082025/i },
+            { q: "7. In the photo \"Blurry Back of Stranger\", who is the man with Jerry's mom?", regex: /colleague|coworker/i },
+            { q: "8. Based on the messages, where is Jerry staying right now?", regex: /^(his\s+)?(chloe'?s|chole'?s|girlfriend'?s)\s+(home|house)$/i },
+            { q: "9. Final Verdict: Is Jerry addicted to illegal drugs? (Yes/No)", regex: /^no$/i },
+            { q: "10. Surprising discovery: Jerry's mom is actually having an ________?", regex: /affair/i }
+        ];
 
-            const inputEl = document.getElementById(`ans-${qNum}`);
-            const iconEl = document.getElementById(`icon-${qNum}`);
-            const val = inputEl.value.trim();
+        // Praise and Encouragement Arrays
+        const praises = [
+            "Excellent deduction!",
+            "You have a sharp eye!",
+            "Spot on, detective!",
+            "Brilliant observation!",
+            "Exactly what I thought!",
+            "Great job piecing that together!",
+            "Your logic is flawless!"
+        ];
 
-            if (questionsState[qNum].regex.test(val)) {
-                // Correct Answer
-                questionsState[qNum].solved = true;
-                inputEl.disabled = true;
-                inputEl.classList.remove('bg-slate-800', 'text-white', 'border-slate-600');
-                inputEl.classList.add('bg-emerald-900/40', 'text-emerald-400', 'border-emerald-500/50', 'font-semibold');
-                iconEl.classList.remove('hidden', 'opacity-0');
-                iconEl.classList.add('opacity-100');
+        const encouragements = [
+            "Hmm, are you sure? Look closer.",
+            "That doesn't seem right. Try again!",
+            "I suspect otherwise. Recheck the clues.",
+            "Not quite. Check the phone again.",
+            "Let's rethink this one."
+        ];
+
+        const baseImgPath = "https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/";
+
+        // Render current question in single container
+        function renderQuestion() {
+            if (currentQIndex < qArray.length) {
+                const qLabel = document.getElementById('active-q-label');
+                qLabel.innerText = qArray[currentQIndex].q;
                 
-                solvedQuestions++;
-                document.getElementById('progress-text').innerText = `${solvedQuestions}/10 Solved`;
+                // Re-trigger animation
+                qLabel.classList.remove('fade-in');
+                void qLabel.offsetWidth; 
+                qLabel.classList.add('fade-in');
+
+                const inputEl = document.getElementById('active-q-input');
+                const selectContainer = document.getElementById('q4-select-container');
+
+                // Q4 Special Handling (Date Dropdown)
+                if (currentQIndex === 3) {
+                    inputEl.classList.add('hidden');
+                    selectContainer.classList.remove('hidden');
+                    selectContainer.classList.add('flex');
+                } else {
+                    inputEl.classList.remove('hidden');
+                    selectContainer.classList.add('hidden');
+                    selectContainer.classList.remove('flex');
+                    inputEl.value = "";
+                    inputEl.focus();
+                }
+            } else {
+                // Completed state
+                document.getElementById('qa-container').innerHTML = `
+                    <div class="text-center text-emerald-400 font-bold py-6 fade-in">
+                        <i class="fa-solid fa-check-circle text-4xl mb-3 block"></i>
+                        Investigation Complete!
+                    </div>`;
+            }
+        }
+
+        // Validate the answer dynamically
+        function submitAnswer() {
+            if (currentQIndex >= qArray.length) return;
+
+            let inputVal = "";
+            const inputEl = document.getElementById('active-q-input');
+            const selectContainer = document.getElementById('q4-select-container');
+
+            // If Q4, assemble string from dropdowns
+            if (currentQIndex === 3) {
+                const month = document.getElementById('q4-month').value;
+                const day = document.getElementById('q4-day').value;
+                const year = document.getElementById('q4-year').value;
+                inputVal = `${day} ${month} ${year}`; // e.g. "15 AUG 2025"
+            } else {
+                inputVal = inputEl.value.trim();
+            }
+
+            const detImg = document.getElementById('detective-img');
+            const detBubble = document.getElementById('detective-bubble');
+
+            if (qArray[currentQIndex].regex.test(inputVal)) {
+                // Answer is Correct
+                currentQIndex++;
+                
+                // Update Progress Text
+                document.getElementById('progress-text').innerText = `${currentQIndex}/10 Solved`;
                 document.getElementById('progress-text').classList.add('text-amber-400');
                 setTimeout(() => document.getElementById('progress-text').classList.remove('text-amber-400'), 500);
 
-                // Show next question automatically
-                const nextQ = document.getElementById(`q-${qNum + 1}`);
-                if (nextQ) nextQ.classList.remove('hidden');
+                // Update Detective Avatar to Success
+                detImg.src = baseImgPath + "detective1.png";
+                
+                // Trigger bubble animation
+                detBubble.parentElement.classList.remove('fade-in');
+                void detBubble.parentElement.offsetWidth;
+                detBubble.parentElement.classList.add('fade-in');
 
-                // Check if all solved
-                if (solvedQuestions === 10) {
+                if (currentQIndex < qArray.length) {
+                    detBubble.innerText = praises[Math.floor(Math.random() * praises.length)];
+                    renderQuestion();
+                } else {
+                    detBubble.innerText = "We have everything we need! Let's confront Mrs. Chan now.";
+                    renderQuestion(); // Render completed state
                     unlockConfrontation();
                 }
+            } else {
+                // Answer is Wrong
+                detImg.src = baseImgPath + "detective2.png";
+                
+                detBubble.parentElement.classList.remove('fade-in');
+                void detBubble.parentElement.offsetWidth;
+                detBubble.parentElement.classList.add('fade-in');
+                
+                detBubble.innerText = encouragements[Math.floor(Math.random() * encouragements.length)];
+                
+                // Add shake animation to the correct input field
+                const targetEl = currentQIndex === 3 ? selectContainer : inputEl;
+                targetEl.classList.remove('animate-shake');
+                void targetEl.offsetWidth; // Trigger reflow
+                targetEl.classList.add('animate-shake');
             }
         }
 
@@ -1233,7 +1306,7 @@
 
         // Confrontation Overlay
         function startConfrontation() {
-            if (solvedQuestions === 10) {
+            if (currentQIndex >= 10) {
                 document.getElementById('confrontation-overlay').classList.remove('hidden');
             }
         }
@@ -1264,6 +1337,14 @@
                 Mrs. Chan lets out a long sigh of relief: "I knew it! He's just being rebellious."<br><br>
                 A few days later, you secretly bring Jerry back. When Jerry realizes you chose to cover for her, his eyes fill with boundless disappointment. He returns home but becomes an empty shell, completely isolating himself. The home looks glamorous, but the wound festers in the dark forever.`;
             }
+
+            // 顯示結局後，延遲 2.5 秒彈出贊助畫面
+            setTimeout(() => {
+                const donateOverlay = document.getElementById('donate-overlay');
+                donateOverlay.classList.remove('hidden');
+                void donateOverlay.offsetWidth; // 強制重繪
+                donateOverlay.classList.remove('opacity-0');
+            }, 2500);
         }
 
         // Dynamic System Time for Phone UI
