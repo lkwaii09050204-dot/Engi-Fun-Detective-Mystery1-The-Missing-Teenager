@@ -10,7 +10,7 @@
 
   gtag('config', 'G-FWZVXBVYPN');
 </script>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Detective Mystery: Secrets Behind the Lens</title>
     <!-- Tailwind CSS CDN -->
@@ -95,11 +95,21 @@
 </head>
 <body class="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 gap-6 lg:gap-8 overflow-x-hidden" onload="initGame()">
 
+    <!-- Intro Comic Screen -->
+    <div id="intro-screen" class="fixed inset-0 bg-slate-950 z-[300] flex flex-col items-center justify-center p-4 transition-opacity duration-500">
+        <div class="max-w-2xl w-full flex flex-col items-center">
+            <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/manga.png" alt="Story Intro" class="w-full max-h-[75vh] object-contain rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)] mb-6">
+            
+            <button id="start-game-btn" onclick="startGame()" class="hidden px-10 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-lg rounded-full shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all transform hover:scale-105 active:scale-95 animate-pulse">
+                Start Investigation
+            </button>
+        </div>
+    </div>
+
     <!-- Left Panel: Detective's Desk & Investigation Notebook -->
-    <!-- Changed h-[740px] to h-auto lg:h-[740px] so it expands on mobile -->
     <div class="w-full lg:w-1/2 max-w-xl bg-slate-800/80 backdrop-blur border border-slate-700 p-4 sm:p-6 rounded-2xl shadow-2xl flex flex-col h-auto lg:h-[740px]">
         
-        <div class="flex items-center gap-3 mb-4 shrink-0">
+        <div class="flex items-center gap-3 mb-6 shrink-0">
             <div class="bg-amber-500 text-slate-900 p-2.5 rounded-lg">
                 <i class="fa-solid fa-briefcase text-xl"></i>
             </div>
@@ -109,53 +119,43 @@
             </div>
         </div>
 
-        <!-- Case Briefing -->
-        <div class="bg-slate-900/60 p-3 sm:p-4 rounded-xl mb-4 border border-slate-700/50 shrink-0">
-            <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-amber-500"></i> Client Mrs. Chan's Statement</h2>
-            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
-                "My son Jerry has been acting really strange since November. He falls asleep the second he gets home, and at night, he locks himself in his room, muttering to himself and acting totally hyped up. I suspect he's hanging out with dealers and taking those <b>'pills'</b>. In early December, he just ran away from home... I found his phone under the sofa and unlocked it. Please, find out where he's hiding and get proof of his drug use!"
-            </p>
-        </div>
-
         <!-- Interactive Detective's Notebook (Dynamic Single Question) -->
-        <!-- Removed 'overflow-hidden' here to prevent clipping on mobile -->
-        <div class="flex-1 flex flex-col min-h-[200px] mb-2 relative">
-            <div class="flex items-center justify-between mb-3 shrink-0">
+        <div class="flex-1 flex flex-col min-h-[250px] mb-2 relative">
+            <div class="flex items-center justify-between mb-4 shrink-0">
                 <h3 class="text-xs sm:text-sm font-bold text-amber-400"><i class="fa-solid fa-clipboard-question mr-1"></i> Investigation Questionnaire</h3>
-                <span id="progress-text" class="text-[10px] sm:text-xs text-slate-400 font-mono bg-slate-900 px-2 py-1 rounded">0/11 Solved</span>
+                <span id="progress-text" class="text-[10px] sm:text-xs text-slate-400 font-mono bg-slate-900 px-2 py-1 rounded shadow-inner">0/11 Solved</span>
             </div>
             
             <!-- Active Question Container -->
             <div id="qa-container" class="bg-slate-900/60 p-4 sm:p-5 rounded-xl border border-blue-400/30 shadow-lg mb-auto">
-                <label id="active-q-label" class="block text-xs sm:text-sm text-slate-200 mb-3 font-semibold leading-relaxed fade-in">1. Who is the person Jerry messages the most?</label>
+                <label id="active-q-label" class="block text-xs sm:text-sm text-slate-200 mb-4 font-semibold leading-relaxed fade-in">1. Who is the person Jerry messages the most?</label>
                 <div class="flex gap-2 w-full">
                     <!-- Normal Text Input -->
-                    <input type="text" id="active-q-input" onkeypress="if(event.key === 'Enter') submitAnswer()" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 pl-2 sm:pl-3 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" placeholder="Type your answer...">
+                    <input type="text" id="active-q-input" onkeypress="if(event.key === 'Enter') submitAnswer()" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 pl-2 sm:pl-3 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all duration-300" placeholder="Type your answer...">
                     
                     <!-- Q4 Specialized Dropdown Selects -->
-                    <div id="q4-select-container" class="hidden flex-1 gap-1">
-                        <select id="q4-month" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center">
+                    <div id="q4-select-container" class="hidden flex-1 gap-1 transition-all duration-300 rounded-lg">
+                        <select id="q4-month" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center bg-transparent">
                             <option value="JAN">JAN</option><option value="FEB">FEB</option><option value="MAR">MAR</option><option value="APR">APR</option>
                             <option value="MAY">MAY</option><option value="JUN">JUN</option><option value="JUL">JUL</option><option value="AUG">AUG</option>
                             <option value="SEP">SEP</option><option value="OCT">OCT</option><option value="NOV">NOV</option><option value="DEC">DEC</option>
                         </select>
-                        <select id="q4-day" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center"></select>
-                        <select id="q4-year" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center"></select>
+                        <select id="q4-day" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center bg-transparent"></select>
+                        <select id="q4-year" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center bg-transparent"></select>
                     </div>
 
-                    <button onclick="submitAnswer()" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold px-3 py-2 sm:px-4 rounded-lg text-xs sm:text-sm transition shadow-md active:scale-95 shrink-0">Submit</button>
+                    <button id="submit-ans-btn" onclick="submitAnswer()" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold px-3 py-2 sm:px-4 rounded-lg text-xs sm:text-sm transition-all duration-300 shadow-md active:scale-95 shrink-0 min-w-[70px] flex items-center justify-center">Submit</button>
                 </div>
             </div>
 
             <!-- Detective Character Area -->
-            <!-- Adjusted heights to be responsive and not fixed to 32 -->
-            <div class="flex items-end gap-2 sm:gap-3 mt-4 shrink-0 min-h-[110px] sm:min-h-[130px] relative">
+            <div class="flex items-end gap-2 sm:gap-3 mt-6 shrink-0 min-h-[110px] sm:min-h-[130px] relative">
                 <div class="relative w-20 sm:w-[110px] h-[90px] sm:h-[130px] flex-shrink-0 z-10 flex items-end">
                     <img id="detective-img" src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/detective1.png" alt="Detective" class="w-full h-full object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300">
                 </div>
                 <!-- Speech Bubble -->
-                <div class="relative bg-slate-100 text-slate-800 text-[10px] sm:text-[11px] font-bold p-2.5 sm:p-3 rounded-2xl rounded-bl-sm shadow-xl mb-2 sm:mb-4 max-w-[180px] sm:max-w-[220px] leading-relaxed border border-slate-300 fade-in">
-                    <span id="detective-bubble">Let's find out the truth! Read the client's statement and check the phone.</span>
+                <div class="relative bg-slate-100 text-slate-800 text-[10px] sm:text-[11px] font-bold p-2.5 sm:p-3 rounded-2xl rounded-bl-sm shadow-xl mb-2 sm:mb-4 max-w-[180px] sm:max-w-[220px] leading-relaxed border border-slate-300 fade-in transition-all duration-300">
+                    <span id="detective-bubble">Let's find out the truth! Look at the phone clues carefully.</span>
                     <!-- Chat bubble tail -->
                     <div class="absolute -bottom-[4px] left-0 w-3 h-3 bg-slate-100 transform rotate-45 translate-x-1 -translate-y-1 border-b border-l border-slate-300"></div>
                 </div>
@@ -965,8 +965,23 @@
     </div>
 
     <script>
+        // Start Game from Comic Intro
+        function startGame() {
+            const introScreen = document.getElementById('intro-screen');
+            introScreen.classList.add('opacity-0');
+            setTimeout(() => {
+                introScreen.classList.add('hidden');
+            }, 500); // Matches transition duration
+        }
+
         // Initialize Dropdowns and Set up Game
         function initGame() {
+            // Intro comic button timing
+            setTimeout(() => {
+                const btn = document.getElementById('start-game-btn');
+                btn.classList.remove('hidden');
+            }, 3000);
+
             // Generate Day Options
             const q4Day = document.getElementById('q4-day');
             for(let i=1; i<=31; i++) {
@@ -997,7 +1012,7 @@
         const qArray = [
             { q: "1. Who is the person Jerry messages the most?", regex: /^ah\s*keung$|^keung$/i },
             { q: "2. What kind of \"pills\" were they actually discussing?", regex: /exp|online games|online game/i },
-            { q: "3. What is the name of the game Jerry stays awake playing?", regex: /^heroes\s*arena$/i },
+            { q: "3. What is the name of the game Jerry stays awake playing?", regex: /^(the\s+)?heroes\s*arena$/i },
             { q: "4. What is the exact date of the \"Happy Family Trip\" photo?", regex: /^15\s*aug\s*2025$/i },
             { q: "5. Is there anything suspicious in the photo album? (Yes/No)", regex: /^yes$/i },
             { q: "6. What is the password to Jerry's secret diary?", regex: /20250815|08152025|15082025/i },
@@ -1072,6 +1087,7 @@
             let inputVal = "";
             const inputEl = document.getElementById('active-q-input');
             const selectContainer = document.getElementById('q4-select-container');
+            const submitBtn = document.getElementById('submit-ans-btn');
 
             // If Q4, assemble string from dropdowns
             if (currentQIndex === 3) {
@@ -1083,15 +1099,45 @@
                 inputVal = inputEl.value.trim();
             }
 
+            // CHEAT CODE CHECK: If Q1 and answer is "ending"
+            if (currentQIndex === 0 && inputVal.toLowerCase() === 'ending') {
+                currentQIndex = qArray.length; // Set to 11
+                document.getElementById('progress-text').innerText = `${qArray.length}/${qArray.length} Solved`;
+                document.getElementById('progress-text').classList.add('text-amber-400');
+                
+                document.getElementById('qa-container').innerHTML = `
+                    <div class="text-center text-emerald-400 font-bold py-6 fade-in">
+                        <i class="fa-solid fa-check-circle text-4xl mb-3 block"></i>
+                        Investigation Complete! (Shortcut Activated)
+                    </div>`;
+                
+                const detImg = document.getElementById('detective-img');
+                const detBubble = document.getElementById('detective-bubble');
+                detImg.src = baseImgPath + "detective1.png";
+                detBubble.innerText = "Shortcut activated! Let's confront Mrs. Chan now.";
+                
+                unlockConfrontation();
+                return;
+            }
+
             const detImg = document.getElementById('detective-img');
             const detBubble = document.getElementById('detective-bubble');
 
             if (qArray[currentQIndex].regex.test(inputVal)) {
-                // Answer is Correct
-                currentQIndex++;
-                
-                // Update Progress Text
-                document.getElementById('progress-text').innerText = `${currentQIndex}/11 Solved`;
+                // Answer is Correct - Visual Feedback ✅
+                submitBtn.innerHTML = '<i class="fa-solid fa-check text-xl"></i>';
+                submitBtn.classList.replace('bg-amber-600', 'bg-emerald-500');
+                submitBtn.classList.replace('hover:bg-amber-500', 'hover:bg-emerald-400');
+                submitBtn.disabled = true;
+
+                if (currentQIndex === 3) {
+                    selectContainer.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-900/20');
+                } else {
+                    inputEl.classList.add('border-emerald-500', 'bg-emerald-900/20', 'text-emerald-400');
+                }
+
+                // Update Progress Text immediately
+                document.getElementById('progress-text').innerText = `${currentQIndex + 1}/11 Solved`;
                 document.getElementById('progress-text').classList.add('text-amber-400');
                 setTimeout(() => document.getElementById('progress-text').classList.remove('text-amber-400'), 500);
 
@@ -1102,15 +1148,30 @@
                 detBubble.parentElement.classList.remove('fade-in');
                 void detBubble.parentElement.offsetWidth;
                 detBubble.parentElement.classList.add('fade-in');
+                detBubble.innerText = praises[Math.floor(Math.random() * praises.length)];
 
-                if (currentQIndex < qArray.length) {
-                    detBubble.innerText = praises[Math.floor(Math.random() * praises.length)];
-                    renderQuestion();
-                } else {
-                    detBubble.innerText = "We have everything we need! Let's confront Mrs. Chan now.";
-                    renderQuestion(); // Render completed state
-                    unlockConfrontation();
-                }
+                // Delay 1.5 seconds before moving to next question
+                setTimeout(() => {
+                    currentQIndex++;
+                    
+                    // Reset Button & Input Styles
+                    submitBtn.innerHTML = 'Submit';
+                    submitBtn.classList.replace('bg-emerald-500', 'bg-amber-600');
+                    submitBtn.classList.replace('hover:bg-emerald-400', 'hover:bg-amber-500');
+                    submitBtn.disabled = false;
+
+                    selectContainer.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-900/20');
+                    inputEl.classList.remove('border-emerald-500', 'bg-emerald-900/20', 'text-emerald-400');
+
+                    if (currentQIndex < qArray.length) {
+                        renderQuestion();
+                    } else {
+                        detBubble.innerText = "We have everything we need! Let's confront Mrs. Chan now.";
+                        renderQuestion(); // Render completed state
+                        unlockConfrontation();
+                    }
+                }, 1500);
+
             } else {
                 // Answer is Wrong
                 detImg.src = baseImgPath + "detective2.png";
