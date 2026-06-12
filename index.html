@@ -11,7 +11,7 @@
   gtag('config', 'G-FWZVXBVYPN');
 </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Detective Mystery: Secrets Behind the Lens</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,18 +23,20 @@
             font-family: 'Inter', sans-serif;
             background: radial-gradient(circle, #1e293b 0%, #0f172a 100%);
         }
-        /* Mobile Frame Styling */
+        /* Mobile Frame Styling - Fully Responsive */
         .phone-case {
-            width: 360px;
+            width: 100%;
+            max-width: 360px;
             height: 740px;
+            max-height: 85vh; /* Adapts nicely to smaller phone screens vertically */
             border: 12px solid #334155;
-            border-radius: 45px;
+            border-radius: 40px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             position: relative;
             background: #1e1e2e;
         }
         .notch {
-            width: 150px;
+            width: 130px;
             height: 25px;
             background: #334155;
             position: absolute;
@@ -48,7 +50,7 @@
         .screen-container {
             width: 100%;
             height: 100%;
-            border-radius: 33px;
+            border-radius: 30px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -84,90 +86,89 @@
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Adjust borders slightly on very small screens */
+        @media (max-width: 380px) {
+            .phone-case { border-width: 8px; border-radius: 35px; }
+            .screen-container { border-radius: 28px; }
+        }
     </style>
 </head>
-<body class="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 lg:p-8 gap-8" onload="initGame()">
+<body class="flex flex-col lg:flex-row items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 gap-6 lg:gap-8 overflow-x-hidden" onload="initGame()">
 
     <!-- Left Panel: Detective's Desk & Investigation Notebook -->
-    <div class="w-full lg:w-1/2 max-w-xl bg-slate-800/80 backdrop-blur border border-slate-700 p-6 rounded-2xl shadow-2xl flex flex-col h-[740px]">
+    <!-- Changed h-[740px] to h-auto lg:h-[740px] so it expands on mobile -->
+    <div class="w-full lg:w-1/2 max-w-xl bg-slate-800/80 backdrop-blur border border-slate-700 p-4 sm:p-6 rounded-2xl shadow-2xl flex flex-col h-auto lg:h-[740px]">
         
         <div class="flex items-center gap-3 mb-4 shrink-0">
             <div class="bg-amber-500 text-slate-900 p-2.5 rounded-lg">
                 <i class="fa-solid fa-briefcase text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold text-amber-400">Vanguard Investigations</h1>
-                <p class="text-xs text-slate-400">Case #202611 - "The Missing Teenager"</p>
+                <h1 class="text-lg sm:text-xl font-bold text-amber-400">Vanguard Investigations</h1>
+                <p class="text-[10px] sm:text-xs text-slate-400">Case #202611 - "The Missing Teenager"</p>
             </div>
         </div>
 
         <!-- Case Briefing -->
-        <div class="bg-slate-900/60 p-4 rounded-xl mb-4 border border-slate-700/50 shrink-0">
-            <h2 class="text-sm font-bold text-slate-300 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-amber-500"></i> Client Mrs. Chan's Statement</h2>
-            <p class="text-xs text-slate-400 leading-relaxed">
+        <div class="bg-slate-900/60 p-3 sm:p-4 rounded-xl mb-4 border border-slate-700/50 shrink-0">
+            <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-2"><i class="fa-solid fa-file-invoice mr-1 text-amber-500"></i> Client Mrs. Chan's Statement</h2>
+            <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
                 "My son Jerry has been acting really strange since November. He falls asleep the second he gets home, and at night, he locks himself in his room, muttering to himself and acting totally hyped up. I suspect he's hanging out with dealers and taking those <b>'pills'</b>. In early December, he just ran away from home... I found his phone under the sofa and unlocked it. Please, find out where he's hiding and get proof of his drug use!"
             </p>
         </div>
 
         <!-- Interactive Detective's Notebook (Dynamic Single Question) -->
-        <div class="flex-1 flex flex-col min-h-[200px] mb-2 overflow-hidden relative">
+        <!-- Removed 'overflow-hidden' here to prevent clipping on mobile -->
+        <div class="flex-1 flex flex-col min-h-[200px] mb-2 relative">
             <div class="flex items-center justify-between mb-3 shrink-0">
-                <h3 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-clipboard-question mr-1"></i> Investigation Questionnaire</h3>
-                <span id="progress-text" class="text-xs text-slate-400 font-mono bg-slate-900 px-2 py-1 rounded">0/10 Solved</span>
+                <h3 class="text-xs sm:text-sm font-bold text-amber-400"><i class="fa-solid fa-clipboard-question mr-1"></i> Investigation Questionnaire</h3>
+                <span id="progress-text" class="text-[10px] sm:text-xs text-slate-400 font-mono bg-slate-900 px-2 py-1 rounded">0/11 Solved</span>
             </div>
             
             <!-- Active Question Container -->
-            <div id="qa-container" class="bg-slate-900/60 p-5 rounded-xl border border-blue-400/30 shadow-lg mb-auto">
-                <label id="active-q-label" class="block text-sm text-slate-200 mb-3 font-semibold leading-relaxed fade-in">1. Who is the person Jerry messages the most?</label>
+            <div id="qa-container" class="bg-slate-900/60 p-4 sm:p-5 rounded-xl border border-blue-400/30 shadow-lg mb-auto">
+                <label id="active-q-label" class="block text-xs sm:text-sm text-slate-200 mb-3 font-semibold leading-relaxed fade-in">1. Who is the person Jerry messages the most?</label>
                 <div class="flex gap-2 w-full">
                     <!-- Normal Text Input -->
-                    <input type="text" id="active-q-input" onkeypress="if(event.key === 'Enter') submitAnswer()" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 pl-3 text-sm text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" placeholder="Type your answer...">
+                    <input type="text" id="active-q-input" onkeypress="if(event.key === 'Enter') submitAnswer()" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 pl-2 sm:pl-3 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition" placeholder="Type your answer...">
                     
                     <!-- Q4 Specialized Dropdown Selects -->
                     <div id="q4-select-container" class="hidden flex-1 gap-1">
-                        <select id="q4-month" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 px-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                            <option value="JAN">JAN</option>
-                            <option value="FEB">FEB</option>
-                            <option value="MAR">MAR</option>
-                            <option value="APR">APR</option>
-                            <option value="MAY">MAY</option>
-                            <option value="JUN">JUN</option>
-                            <option value="JUL">JUL</option>
-                            <option value="AUG">AUG</option>
-                            <option value="SEP">SEP</option>
-                            <option value="OCT">OCT</option>
-                            <option value="NOV">NOV</option>
-                            <option value="DEC">DEC</option>
+                        <select id="q4-month" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center">
+                            <option value="JAN">JAN</option><option value="FEB">FEB</option><option value="MAR">MAR</option><option value="APR">APR</option>
+                            <option value="MAY">MAY</option><option value="JUN">JUN</option><option value="JUL">JUL</option><option value="AUG">AUG</option>
+                            <option value="SEP">SEP</option><option value="OCT">OCT</option><option value="NOV">NOV</option><option value="DEC">DEC</option>
                         </select>
-                        <select id="q4-day" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 px-2 text-sm text-white focus:outline-none focus:border-amber-500"></select>
-                        <select id="q4-year" class="flex-1 bg-slate-800 border border-slate-600 rounded-lg py-2 px-2 text-sm text-white focus:outline-none focus:border-amber-500"></select>
+                        <select id="q4-day" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center"></select>
+                        <select id="q4-year" class="flex-1 w-0 bg-slate-800 border border-slate-600 rounded-lg py-2 px-0.5 sm:px-2 text-[10px] sm:text-sm text-white focus:outline-none focus:border-amber-500 appearance-none text-center"></select>
                     </div>
 
-                    <button onclick="submitAnswer()" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold px-4 py-2 rounded-lg transition shadow-md active:scale-95 shrink-0">Submit</button>
+                    <button onclick="submitAnswer()" class="bg-amber-600 hover:bg-amber-500 text-slate-900 font-bold px-3 py-2 sm:px-4 rounded-lg text-xs sm:text-sm transition shadow-md active:scale-95 shrink-0">Submit</button>
                 </div>
             </div>
 
             <!-- Detective Character Area -->
-            <div class="flex items-end gap-3 mt-4 shrink-0 h-32 relative">
-                <div class="relative w-[110px] h-[130px] flex-shrink-0 z-10 flex items-end">
-                    <img id="detective-img" src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/detective1.png" alt="Detective" class="w-full object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300">
+            <!-- Adjusted heights to be responsive and not fixed to 32 -->
+            <div class="flex items-end gap-2 sm:gap-3 mt-4 shrink-0 min-h-[110px] sm:min-h-[130px] relative">
+                <div class="relative w-20 sm:w-[110px] h-[90px] sm:h-[130px] flex-shrink-0 z-10 flex items-end">
+                    <img id="detective-img" src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/detective1.png" alt="Detective" class="w-full h-full object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300">
                 </div>
                 <!-- Speech Bubble -->
-                <div class="relative bg-slate-100 text-slate-800 text-[11px] font-bold p-3 rounded-2xl rounded-bl-sm shadow-xl mb-4 max-w-[220px] leading-relaxed border border-slate-300 fade-in">
+                <div class="relative bg-slate-100 text-slate-800 text-[10px] sm:text-[11px] font-bold p-2.5 sm:p-3 rounded-2xl rounded-bl-sm shadow-xl mb-2 sm:mb-4 max-w-[180px] sm:max-w-[220px] leading-relaxed border border-slate-300 fade-in">
                     <span id="detective-bubble">Let's find out the truth! Read the client's statement and check the phone.</span>
                     <!-- Chat bubble tail -->
-                    <div class="absolute -bottom-[5px] left-0 w-3 h-3 bg-slate-100 transform rotate-45 translate-x-1 -translate-y-1 border-b border-l border-slate-300"></div>
+                    <div class="absolute -bottom-[4px] left-0 w-3 h-3 bg-slate-100 transform rotate-45 translate-x-1 -translate-y-1 border-b border-l border-slate-300"></div>
                 </div>
             </div>
         </div>
 
         <!-- Confront Button -->
-        <div class="shrink-0 mt-2 z-20">
-            <button id="confront-btn" onclick="startConfrontation()" class="w-full py-3.5 bg-slate-700 text-slate-500 font-bold rounded-xl cursor-not-allowed transition flex items-center justify-center gap-2" disabled>
+        <div class="shrink-0 mt-3 sm:mt-2 z-20">
+            <button id="confront-btn" onclick="startConfrontation()" class="w-full py-3 sm:py-3.5 bg-slate-700 text-slate-500 font-bold rounded-xl cursor-not-allowed transition flex items-center justify-center gap-2 text-sm sm:text-base" disabled>
                 <i class="fa-solid fa-comments-question"></i> 
                 Confront Mrs. Chan
             </button>
-            <p id="confront-hint" class="text-[10px] text-center text-slate-400 mt-2">※ Answer all 10 questions correctly to unlock the final confrontation.</p>
+            <p id="confront-hint" class="text-[9px] sm:text-[10px] text-center text-slate-400 mt-2">※ Answer all 11 questions correctly to unlock the final confrontation.</p>
         </div>
     </div>
 
@@ -667,6 +668,15 @@
                             </div>
                             <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/%E7%85%A7%E7%89%873.jpeg" alt="Stranger Back" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
                         </div>
+
+                        <!-- Photo 6: Chloe's birthday -->
+                        <div class="aspect-square bg-slate-200 relative group cursor-pointer overflow-hidden" onclick="viewImage('Chloe’s birthday', 'Celebrating with the best person.', 'Oct 28, 2026', 'https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/chloe.png', 'from-pink-400 to-rose-500', 'fa-cake-candles')">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-pink-400 to-rose-500 flex flex-col items-center justify-center p-2 text-center text-white">
+                                <i class="fa-solid fa-cake-candles text-xl opacity-40 mb-1"></i>
+                                <span class="text-[8px] font-semibold">Chloe's birthday</span>
+                            </div>
+                            <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/chloe.png" alt="Chloe's birthday" class="absolute inset-0 w-full h-full object-cover z-10" onload="this.style.opacity='1'" onerror="this.style.display='none'" style="opacity: 0; transition: opacity 0.3s;">
+                        </div>
                     </div>
                 </div>
 
@@ -992,9 +1002,10 @@
             { q: "5. Is there anything suspicious in the photo album? (Yes/No)", regex: /^yes$/i },
             { q: "6. What is the password to Jerry's secret diary?", regex: /20250815|08152025|15082025/i },
             { q: "7. In the photo \"Blurry Back of Stranger\", who is the man with Jerry's mom?", regex: /colleague|coworker/i },
-            { q: "8. Based on the messages, where is Jerry staying right now?", regex: /^(his\s+)?(chloe'?s|chole'?s|girlfriend'?s)\s+(home|house)$/i },
+            { q: "8. Whose house is Jerry staying in now?", regex: /^chloe$/i },
             { q: "9. Final Verdict: Is Jerry addicted to illegal drugs? (Yes/No)", regex: /^no$/i },
-            { q: "10. Surprising discovery: Jerry's mom is actually having an ________?", regex: /affair/i }
+            { q: "10. Surprising discovery: Jerry's mom is actually having an ________?", regex: /affair/i },
+            { q: "11. Do you think Dad knows about this? (Yes/No)", regex: /^no$/i }
         ];
 
         // Praise and Encouragement Arrays
@@ -1080,7 +1091,7 @@
                 currentQIndex++;
                 
                 // Update Progress Text
-                document.getElementById('progress-text').innerText = `${currentQIndex}/10 Solved`;
+                document.getElementById('progress-text').innerText = `${currentQIndex}/11 Solved`;
                 document.getElementById('progress-text').classList.add('text-amber-400');
                 setTimeout(() => document.getElementById('progress-text').classList.remove('text-amber-400'), 500);
 
@@ -1315,7 +1326,7 @@
 
         // Confrontation Overlay
         function startConfrontation() {
-            if (currentQIndex >= 10) {
+            if (currentQIndex >= 11) {
                 document.getElementById('confrontation-overlay').classList.remove('hidden');
             }
         }
