@@ -16,6 +16,10 @@ If you enjoy this game, feel free to buy me a coffee to support the development 
 ## 🛠️ Technical Details
 This game is developed by Engi-Fun using HTML, CSS, and JavaScript.
 
+## 💬 Feedback & Suggestions
+Have feedback or suggestions? Feel free to [open an Issue here](https://github.com/lkwaii09052024-dot/Engi-Fun-Detective-Mystery1-The-Missing-Teenager/issues/new)!
+
+
 ## 🎶Music credit:
 Music by Vlad Krotov from Pixabay
 
@@ -38,6 +42,10 @@ Music by Vlad Krotov from Pixabay
 
 ## 🛠️ 技術說明
 本遊戲由 Engi-Fun 開發，使用 HTML, CSS, 及 JavaScript 製作。
+
+## 💬 回饋與建議
+有任何回饋或建議嗎？歡迎[點擊這裡開啟 Issue](https://github.com/lkwaii09052024-dot/Engi-Fun-Detective-Mystery1-The-Missing-Teenager/issues/new) 留言告訴我！
+
 
 ## 🎶Music credit:
 Music by Vlad Krotov from Pixabay
