@@ -10,9 +10,9 @@
 
   gtag('config', 'G-FWZVXBVYPN');
 </script>
-    <meta charset="UTF-8">
+   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Detective Mystery: The Missing Teenager</title>
+    <title>Detective Mystery: Secrets Behind the Lens</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for premium icons -->
@@ -98,9 +98,21 @@
     <!-- Intro Comic Screen -->
     <div id="intro-screen" class="fixed inset-0 bg-slate-950 z-[300] flex flex-col items-center justify-center p-4 transition-opacity duration-500">
         <div class="max-w-2xl w-full flex flex-col items-center">
-            <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/manga.png" alt="Story Intro" class="w-full max-h-[75vh] object-contain rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)] mb-6">
             
-            <button id="start-game-btn" onclick="startGame()" class="hidden px-10 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-lg rounded-full shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all transform hover:scale-105 active:scale-95 animate-pulse">
+            <!-- Series Title -->
+            <h1 class="text-2xl sm:text-3xl font-bold text-amber-400 tracking-wide mb-6 text-center drop-shadow-md">
+                Detective Mystery : The Missing Teenager
+            </h1>
+
+            <img src="https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/manga.png" alt="Story Intro" class="w-full max-h-[60vh] object-contain rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)] mb-6">
+            
+            <!-- Loading Dots Placeholder -->
+            <div id="loading-dots" class="px-10 py-3.5 text-amber-500/60 font-bold text-4xl tracking-[0.3em] animate-pulse flex items-center justify-center h-[60px]">
+                . . .
+            </div>
+
+            <!-- Start Investigation Button -->
+            <button id="start-game-btn" onclick="startGame()" class="hidden px-10 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-lg rounded-full shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all transform hover:scale-105 active:scale-95 animate-pulse h-[60px]">
                 Start Investigation
             </button>
         </div>
@@ -934,7 +946,8 @@
             <!-- Result Box (Replaced Text with Image) -->
             <div id="confront-result" class="hidden mt-4 bg-slate-950 border-2 border-amber-500 rounded-xl overflow-hidden">
                 <img id="ending-img" src="" alt="Ending Comic" class="w-full h-auto object-contain">
-                <div class="p-4 flex justify-end bg-slate-900">
+                <div class="p-4 flex items-center justify-between bg-slate-900">
+                    <span class="text-[9px] text-slate-500 italic">Music by Vlad Krotov from Pixabay</span>
                     <button onclick="location.reload()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-xs font-bold rounded-lg hover:bg-amber-400 transition shadow-lg">Close Case (Restart)</button>
                 </div>
             </div>
@@ -970,8 +983,16 @@
     </a>
 
     <script>
+        // Setup BGM
+        const gameBgm = new Audio('https://raw.githubusercontent.com/lkwaii09050204-dot/testing-photo-in-website/main/bgm.mp3');
+        gameBgm.loop = true;
+        gameBgm.volume = 0.4; // 稍微降低音量，提供更好的沈浸感
+
         // Start Game from Comic Intro
         function startGame() {
+            // Play music on user interaction
+            gameBgm.play().catch(err => console.warn('BGM Auto-play prevented', err));
+            
             const introScreen = document.getElementById('intro-screen');
             introScreen.classList.add('opacity-0');
             setTimeout(() => {
@@ -984,7 +1005,9 @@
             // Intro comic button timing
             setTimeout(() => {
                 const btn = document.getElementById('start-game-btn');
-                btn.classList.remove('hidden');
+                const dots = document.getElementById('loading-dots');
+                if (dots) dots.classList.add('hidden');
+                if (btn) btn.classList.remove('hidden');
             }, 3000);
 
             // Generate Day Options
