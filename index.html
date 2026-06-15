@@ -86,6 +86,14 @@
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Breathe Animation for Visual Hint */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3); }
+            50% { transform: scale(1.08); box-shadow: 0 10px 25px 5px rgba(16, 185, 129, 0.6); }
+        }
+        .animate-breathe {
+            animation: breathe 2s infinite ease-in-out;
+        }
         /* Adjust borders slightly on very small screens */
         @media (max-width: 380px) {
             .phone-case { border-width: 8px; border-radius: 35px; }
@@ -110,6 +118,11 @@
             <div id="loading-dots" class="px-10 py-3.5 text-amber-500/60 font-bold text-4xl tracking-[0.3em] animate-pulse flex items-center justify-center h-[60px]">
                 . . .
             </div>
+
+            <!-- Start Hint (Hidden initially) -->
+            <p id="start-hint" class="hidden text-amber-200/70 text-xs sm:text-sm mb-3 italic fade-in">
+                Hint: Tap on the phone screen to investigate.
+            </p>
 
             <!-- Start Investigation Button -->
             <button id="start-game-btn" onclick="startGame()" class="hidden px-10 py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold text-lg rounded-full shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all transform hover:scale-105 active:scale-95 animate-pulse h-[60px]">
@@ -209,7 +222,7 @@
                     <div class="grid grid-cols-4 gap-y-6 gap-x-4 mt-10">
                         <!-- REAL APP: WhatsApp -->
                         <div onclick="openApp('whatsapp')" class="flex flex-col items-center cursor-pointer group">
-                            <div class="w-12 h-12 bg-emerald-500 rounded-[14px] flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+                            <div id="wa-icon-container" class="w-12 h-12 bg-emerald-500 rounded-[14px] flex items-center justify-center shadow-lg active:scale-95 transition-transform animate-breathe">
                                 <i class="fa-brands fa-whatsapp text-white text-3xl"></i>
                             </div>
                             <span class="text-[10px] text-white mt-1.5 font-medium drop-shadow-md">WhatsApp</span>
@@ -1005,9 +1018,11 @@
             // Intro comic button timing
             setTimeout(() => {
                 const btn = document.getElementById('start-game-btn');
+                const hint = document.getElementById('start-hint');
                 const dots = document.getElementById('loading-dots');
                 if (dots) dots.classList.add('hidden');
                 if (btn) btn.classList.remove('hidden');
+                if (hint) hint.classList.remove('hidden');
             }, 3000);
 
             // Generate Day Options
@@ -1243,6 +1258,8 @@
             
             // Auto scroll active sub-screens in WhatsApp
             if (appId === 'whatsapp') {
+                const waIcon = document.getElementById('wa-icon-container');
+                if (waIcon) waIcon.classList.remove('animate-breathe');
                 backToInbox();
             }
         }
