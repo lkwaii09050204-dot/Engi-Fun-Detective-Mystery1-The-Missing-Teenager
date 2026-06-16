@@ -222,7 +222,7 @@
                     <div class="grid grid-cols-4 gap-y-6 gap-x-4 mt-10">
                         <!-- REAL APP: WhatsApp -->
                         <div onclick="openApp('whatsapp')" class="flex flex-col items-center cursor-pointer group">
-                            <div class="w-12 h-12 bg-emerald-500 rounded-[14px] flex items-center justify-center shadow-lg active:scale-95 transition-transform animate-breathe">
+                            <div id="wa-icon-container" class="w-12 h-12 bg-emerald-500 rounded-[14px] flex items-center justify-center shadow-lg active:scale-95 transition-transform animate-breathe">
                                 <i class="fa-brands fa-whatsapp text-white text-3xl"></i>
                             </div>
                             <span class="text-[10px] text-white mt-1.5 font-medium drop-shadow-md">WhatsApp</span>
@@ -957,17 +957,19 @@
             </div>
 
             <!-- Result Box (Replaced Text with Image) -->
-            <div id="confront-result" class="hidden mt-4 bg-slate-950 border-2 border-amber-500 rounded-xl overflow-hidden flex flex-col">
-                <img id="ending-img" src="" alt="Ending Comic" class="w-full max-h-[65vh] object-contain mx-auto bg-black">
-<div class="px-4 py-2 text-slate-500 text-[8px] italic"> 
-Music by Vlad Krotov from Pixabay 
+            <div id="confront-result" class="hidden mt-4 bg-slate-950 border-2 border-amber-500 rounded-xl overflow-hidden flex flex-col h-[75vh]">
+    
+    <img id="ending-img" src="" alt="Ending Comic" class="w-full flex-1 object-contain mx-auto bg-black min-h-0">
+    
+    <div class="px-4 py-1 text-slate-500 text-[8px] italic shrink-0">
+        Music by Vlad Krotov from Pixabay
+    </div>
+    
+    <div class="p-4 flex items-center justify-end gap-3 bg-slate-900 border-t border-gray-800 shrink-0">
+        <button onclick="resetToChoices()" class="px-5 py-2.5 bg-slate-700 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-600 transition shadow-lg shrink-0">View Other Endings</button>
+        <button onclick="location.reload()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-xs font-bold rounded-lg hover:bg-amber-400 transition shadow-lg shrink-0">Close Case (Restart)</button>
+    </div>
 </div>
-
-                <div class="p-4 flex items-center justify-end gap-3 bg-slate-900 border-t border-gray-800">
-                    <button onclick="resetToChoices()" class="px-5 py-2.5 bg-slate-700 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-600 transition shadow-lg shrink-0">View Other Endings</button>
-                    <button onclick="location.reload()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-xs font-bold rounded-lg hover:bg-amber-400 transition shadow-lg shrink-0">Close Case (Restart)</button>
-                </div>
-            </div>
         </div>
     </div>
 
