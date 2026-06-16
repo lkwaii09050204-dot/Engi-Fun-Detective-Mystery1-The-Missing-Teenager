@@ -938,7 +938,7 @@
                 <p class="text-xs text-amber-400 font-bold text-center">── As the detective, how will you handle the truth? ──</p>
             </div>
 
-            <!-- Branching Choices -->
+             <!-- Branching Choices -->
             <div id="final-choices" class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <button onclick="triggerEnding('A')" class="p-4 bg-red-950/40 hover:bg-red-900/60 border border-red-800/50 hover:border-red-600 rounded-xl transition text-left group">
                     <span class="font-bold text-red-400 text-xs group-hover:text-red-300 block mb-1">Ending A: Brutal Exposure</span>
@@ -957,11 +957,11 @@
             </div>
 
             <!-- Result Box (Replaced Text with Image) -->
-            <div id="confront-result" class="hidden mt-4 bg-slate-950 border-2 border-amber-500 rounded-xl overflow-hidden">
-                <img id="ending-img" src="" alt="Ending Comic" class="w-full h-auto object-contain">
-                <div class="p-4 flex items-center justify-between bg-slate-900">
-                    <span class="text-[9px] text-slate-500 italic">Music by Vlad Krotov from Pixabay</span>
-                    <button onclick="location.reload()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-xs font-bold rounded-lg hover:bg-amber-400 transition shadow-lg">Close Case (Restart)</button>
+            <div id="confront-result" class="hidden mt-4 bg-slate-950 border-2 border-amber-500 rounded-xl overflow-hidden flex flex-col">
+                <img id="ending-img" src="" alt="Ending Comic" class="w-full max-h-[65vh] object-contain mx-auto bg-black">
+                <div class="p-4 flex items-center justify-end gap-3 bg-slate-900 border-t border-gray-800">
+                    <button onclick="resetToChoices()" class="px-5 py-2.5 bg-slate-700 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-600 transition shadow-lg shrink-0">View Other Endings</button>
+                    <button onclick="location.reload()" class="px-5 py-2.5 bg-amber-500 text-slate-900 text-xs font-bold rounded-lg hover:bg-amber-400 transition shadow-lg shrink-0">Close Case (Restart)</button>
                 </div>
             </div>
         </div>
@@ -1477,6 +1477,24 @@
         }
         setInterval(updateTime, 1000);
         updateTime();
+// 玩家點擊「觀看其他結局」時觸發的動作
+        function resetToChoices() {
+            // 1. 把目前的結局圖片和結果框藏起來
+            document.getElementById('confront-result').classList.add('hidden');
+            // 2. 把 3 個結局的選擇按鈕重新變出來
+            document.getElementById('final-choices').classList.remove('hidden');
+            // 3. 把之前被藏起來的對峙舞台畫面也變回來
+            const confrontStage = document.getElementById('confront-stage');
+            if (confrontStage) {
+                confrontStage.classList.remove('hidden');
+            }
+            // 4. 順便把跳出來的贊助畫面也藏起來，免得擋住玩家選別的結局
+            const donateOverlay = document.getElementById('donate-overlay');
+            if (donateOverlay) {
+                donateOverlay.classList.add('hidden');
+                donateOverlay.classList.add('opacity-0');
+            }
+        }
     </script>
 </body>
 </html>
